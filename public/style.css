@@ -1,0 +1,14 @@
+*{box-sizing:border-box;font-family:Inter,Arial,Helvetica,sans-serif}
+body{margin:0;background:#0b0b0b;color:#eee}
+.hero{background:linear-gradient(90deg,#0b0b0b,#201a2b);padding:30px;text-align:center}
+.logo{height:90px;margin-bottom:10px}
+h1{margin:6px 0;font-size:28px;color:#f7d08a}
+.subtitle{color:#cfc3a6;margin:6px 0}
+.container{padding:20px;max-width:900px;margin:0 auto}
+.card{background:#111;padding:18px;border-radius:8px;margin-bottom:16px;box-shadow:0 4px 12px rgba(0,0,0,0.6)}
+input,button,label{display:block;width:100%;margin-bottom:10px;padding:8px;border-radius:6px;border:1px solid #333;background:#0f1114;color:#eee}
+.btn{background:linear-gradient(90deg,#d4af37,#b6892b);Color:#111;font-weight:600;border:none;cursor:pointer;padding:10px}
+.info{font-size:13px;color:#cfc3a6}
+.footer{text-align:center;padding:12px;color:#777}
+.admin button{width:49%;display:inline-block;margin-right:1%}
+a{color:#f7d08a}
