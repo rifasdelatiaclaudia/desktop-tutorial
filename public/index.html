@@ -54,3 +54,50 @@
   <script src="script.js"></script>
 </body>
 </html>
+<script>
+document.getElementById("formRifa").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const nombre = document.getElementById("nombre").value.trim();
+  const correo = document.getElementById("correo").value.trim();
+  const telefono = document.getElementById("telefono").value.trim();
+
+  if (!nombre || !correo || !telefono) {
+    alert("Por favor completa todos los campos.");
+    return;
+  }
+
+  try {
+    // Generar número aleatorio entre 1 y 100000 (empezando por los más bajos)
+    const numeroAsignado = Math.floor(Math.random() * 100000) + 1;
+
+    // Mostrar número en pantalla
+    document.getElementById("numeroAsignado").textContent = numeroAsignado;
+    document.getElementById("resultado").classList.remove("oculto");
+
+    // Crear pago en Flow
+    const response = await fetch("/crear-pago", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nombre,
+        correo,
+        telefono,
+        numero: numeroAsignado,
+        monto: 3000,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.url) {
+      window.location.href = data.url; // redirige al pago de Flow
+    } else {
+      alert("Hubo un problema al generar el pago.");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("No se pudo procesar la compra.");
+  }
+});
+</script>
