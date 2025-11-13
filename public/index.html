@@ -1,41 +1,56 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rifas de la Tía Claudia</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RifasDeLatiaclaudia 🎟️</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="contenedor">
-    <h1>🎉 Participa por una Land Rover Discovery 3</h1>
-    <h2>Y dos premios de $500.000</h2>
-    <p class="precio">💰 $3.000 por número</p>
-
-    <div class="formulario">
-      <h3>Compra tu número</h3>
-      <form id="formRifa">
-        <label for="nombre">Nombre completo:</label>
-        <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre">
-
-        <label for="telefono">Número de teléfono (obligatorio):</label>
-        <input type="tel" id="telefono" name="telefono" required placeholder="+56 9 1234 5678">
-
-        <button type="submit">Comprar número</button>
-      </form>
-    </div>
-
-    <div class="social">
-      <h3>Síguenos en TikTok</h3>
-      <a href="https://www.tiktok.com/@zkglshwkb..567" target="_blank">@RifasDeLaTiaClaudia</a>
-
-      <p class="contacto">
-        📱 WhatsApp: <a href="https://wa.me/56983303327" target="_blank">+56 9 8330 3327</a><br>
-        📸 Instagram: <a href="https://instagram.com/rifasdelatiaclaudia" target="_blank">@rifasdelatiaclaudia</a>
+  <div class="container">
+    <header style="text-align:center;">
+      <h1>RifasDeLatiaclaudia</h1>
+      <p class="subtitle">
+        Participa por una Land Rover Discovery 3 y dos premios de $500.000 · $3.000 por número
       </p>
-    </div>
+      <p style="margin:6px 0;">
+        Síguenos en TikTok:
+        <a href="https://www.tiktok.com/@zkglshwkb..567" target="_blank" rel="noopener">
+          RifasDeLatiaclaudia
+        </a>
+      </p>
+      <p style="margin:4px 0;">
+        📱 WhatsApp: <a href="https://wa.me/56983303327" target="_blank">+56 9 8330 3327</a><br>
+        📸 Instagram: <a href="https://www.instagram.com/rifasdelatiaclaudia" target="_blank">@rifasdelatiaclaudia</a>
+      </p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Comprar número</h2>
+        <p>No necesitas elegir número. Al comprar se te asigna uno automáticamente.</p>
+
+        <form id="formRifa">
+          <input type="text" id="nombre" placeholder="Tu nombre completo" required />
+          <input type="email" id="correo" placeholder="Tu correo electrónico" required />
+          <input type="tel" id="telefono" placeholder="Tu número de teléfono" required />
+          <button id="btnComprar" type="submit">Comprar número</button>
+        </form>
+
+        <div id="resultado" class="oculto">
+          <h3>¡Gracias por participar! 🎉</h3>
+          <p>Tu número asignado es:</p>
+          <div class="numero" id="numeroAsignado"></div>
+          <p class="detalle">Guarda este número. Te servirá para verificar tu premio.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer style="margin-top:18px; font-size:13px; text-align:center;">
+      <p>Compra segura · Pago por Flow · Rifas organizadas por La Tía Claudia</p>
+    </footer>
   </div>
 
-  <script src="app.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
