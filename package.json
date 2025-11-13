@@ -1,7 +1,7 @@
 {
   "name": "rifasdelatiaclaudia",
   "version": "1.0.0",
-  "description": "Web app local para la Gran Rifa La Tia Claudia - Node + Express + SQLite",
+  "description": "Web app para la Gran Rifa La Tía Claudia - Node + Express + SQLite",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

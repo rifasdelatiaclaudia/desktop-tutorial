@@ -1,67 +1,41 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Gran Rifa La Tía Claudia</title>
-  <link rel="stylesheet" href="/style.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rifas de la Tía Claudia</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="hero">
-    <img src="/logo.png" alt="Logo" class="logo"/>
-    <h1>Gran Rifa La Tía Claudia</h1>
-    <p class="subtitle">Participa por una Land Rover Discovery 3 • N° total: 100.000 • $3.000 por número</p>
-    <a class="btn" href="#comprar">Comprar número</a>
-  </header>
+  <div class="contenedor">
+    <h1>🎉 Participa por una Land Rover Discovery 3</h1>
+    <h2>Y dos premios de $500.000</h2>
+    <p class="precio">💰 $3.000 por número</p>
 
-  <main class="container">
-    <section id="buscar" class="card">
-      <h2>Buscar número</h2>
-      <p>Ingresa un número entre 1 y 100000 (ej: 2578)</p>
-      <input id="numInput" placeholder="Número..." />
-      <button id="checkBtn">Ver disponibilidad</button>
-      <div id="checkResult"></div>
-    </section>
+    <div class="formulario">
+      <h3>Compra tu número</h3>
+      <form id="formRifa">
+        <label for="nombre">Nombre completo:</label>
+        <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre">
 
-    <section id="comprar" class="card">
-      <h2>Comprar número</h2>
-      <form id="buyForm" enctype="multipart/form-data">
-        <label>Número (elige uno):</label>
-        <input name="numero" id="numero" placeholder="Ej: 00012" required/>
-        <label>Nombre completo:</label>
-        <input name="nombre" id="nombre" required/>
-        <label>Teléfono (WhatsApp):</label>
-        <input name="telefono" id="telefono" required/>
-        <label>Email (opcional):</label>
-        <input name="email" id="email"/>
-        <label>Subir comprobante (imagen o PDF):</label>
-        <input type="file" name="comprobante" id="comprobante" accept="image/*,application/pdf"/>
-        <label><input type="checkbox" id="enviarWhatsapp" /> También enviar comprobante por WhatsApp</label>
-        <p class="info">Datos de transferencia: Banco Falabella - Jhoana - Cta Corriente 12550015892 - Monto $3.000 - Asunto: Rifa + N° elegido</p>
-        <button type="submit" class="btn">Enviar comprobante y reservar</button>
+        <label for="telefono">Número de teléfono (obligatorio):</label>
+        <input type="tel" id="telefono" name="telefono" required placeholder="+56 9 1234 5678">
+
+        <button type="submit">Comprar número</button>
       </form>
-      <div id="buyResult"></div>
-    </section>
+    </div>
 
-    <section class="card">
-      <h2>Contacto y redes</h2>
-      <p>WhatsApp: <a href="https://wa.me/56983303327" target="_blank">+56 9 8330 3327</a></p>
-      <p>TikTok: <a href="https://www.tiktok.com/@rifasdelatiaclaudia" target="_blank">@rifasdelatiaclaudia</a></p>
-      <p>Instagram: <strong>RifasDeLaTiaClaudia</strong></p>
-    </section>
+    <div class="social">
+      <h3>Síguenos en TikTok</h3>
+      <a href="https://www.tiktok.com/@zkglshwkb..567" target="_blank">@RifasDeLaTiaClaudia</a>
 
-    <section class="card admin">
-      <h2>Panel administrador</h2>
-      <p>Descargar ventas CSV o ver listado (contraseña requerida)</p>
-      <input id="adminPass" placeholder="Contraseña admin"/>
-      <button id="exportBtn">Descargar CSV</button>
-      <button id="listBtn">Ver ventas (json)</button>
-      <div id="adminResult"></div>
-    </section>
-  </main>
+      <p class="contacto">
+        📱 WhatsApp: <a href="https://wa.me/56983303327" target="_blank">+56 9 8330 3327</a><br>
+        📸 Instagram: <a href="https://instagram.com/rifasdelatiaclaudia" target="_blank">@rifasdelatiaclaudia</a>
+      </p>
+    </div>
+  </div>
 
-  <footer class="footer">© Gran Rifa La Tía Claudia</footer>
-
-  <script src="/app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
