@@ -4,7 +4,32 @@ const cors = require("cors");
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 const axios = require("axios");
+// --- Inicio: DB (pegar justo después de los require)
+const { open } = require("sqlite");
+const sqlite3 = require("sqlite3").verbose();
 
+let db;
+(async () => {
+  db = await open({
+    filename: "./rifa.db",
+    driver: sqlite3.Database,
+  });
+
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS participantes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre TEXT,
+      correo TEXT,
+      telefono TEXT,
+      instagram TEXT,
+      numero INTEGER UNIQUE,
+      orden_flow TEXT,
+      pagado INTEGER DEFAULT 0,
+      fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+})();
+// --- Fin: DB
 const app = express();
 const PORT = process.env.PORT || 10000;
 const BASE_URL = process.env.BASE_URL || "https://rifasdelatiaclaudia.onrender.com";
@@ -140,5 +165,90 @@ app.get("/rifas", (req, res) => {
     res.json(rows);
   });
 });
+const axios = require("axios");
 
+// helper: siguiente número libre (más bajo)
+async function siguienteNumeroLibre() {
+  const rows = await db.all("SELECT numero FROM participantes WHERE numero IS NOT NULL ORDER BY numero ASC");
+  const usados = rows.map(r => r.numero);
+  let esperado = 1;
+  for (let n of usados) {
+    if (n === esperado) esperado++;
+    else if (n > esperado) break;
+  }
+  return esperado;
+}
+
+// 1) iniciar pago: crea reserva y orden en Flow
+app.post("/iniciar-pago", express.json(), async (req, res) => {
+  try {
+    const { nombre, correo = "", telefono = "", instagram = "" } = req.body;
+    if (!nombre || !telefono) return res.status(400).json({ error: "Faltan datos" });
+
+    const result = await db.run(
+      "INSERT INTO participantes (nombre, correo, telefono, instagram, pagado) VALUES (?, ?, ?, ?, 0)",
+      [nombre, correo, telefono, instagram]
+    );
+    const reservaId = result.lastID;
+    const commerceOrder = `RIFA-${reservaId}-${Date.now()}`;
+
+    const payload = {
+      apiKey: process.env.FLOW_API_KEY,
+      commerceOrder,
+      subject: `Rifa - reserva ${reservaId}`,
+      currency: "CLP",
+      amount: 3000,
+      email: correo,
+      urlConfirmation: `${process.env.BASE_URL}/flow-confirm`,
+      urlReturn: `${process.env.BASE_URL}/flow-return?reserva=${reservaId}`
+    };
+
+    const flowRes = await axios.post("https://www.flow.cl/api/payment/create", payload, {
+      headers: { "Content-Type": "application/json" }
+    });
+
+    const flowUrl = flowRes.data.url || flowRes.data.payment_url || flowRes.data.redirect_url;
+    await db.run("UPDATE participantes SET orden_flow = ? WHERE id = ?", [commerceOrder, reservaId]);
+
+    return res.json({ url: flowUrl, reservaId });
+  } catch (err) {
+    console.error("Error /iniciar-pago:", err.response?.data || err.message || err);
+    return res.status(500).json({ error: "No se pudo iniciar el pago" });
+  }
+});
+
+// 2) webhook que Flow llama al confirmar (configurar en Flow panel)
+app.post("/flow-confirm", express.json(), async (req, res) => {
+  try {
+    const body = req.body || {};
+    const commerceOrder = body.commerceOrder || body.order || body.commerce_order;
+    if (!commerceOrder) return res.status(400).send("missing commerceOrder");
+
+    const row = await db.get("SELECT * FROM participantes WHERE orden_flow = ?", [commerceOrder]);
+    if (!row) return res.status(404).send("not found");
+    if (row.pagado === 1) return res.status(200).send("already processed");
+
+    const numeroASIG = await siguienteNumeroLibre();
+    await db.run("UPDATE participantes SET numero = ?, pagado = 1 WHERE id = ?", [numeroASIG, row.id]);
+
+    console.log(`Pago confirmado para reserva ${row.id} -> numero ${numeroASIG}`);
+    res.status(200).send("ok");
+  } catch (err) {
+    console.error("Error /flow-confirm:", err);
+    res.status(500).send("error");
+  }
+});
+
+// 3) return url donde Flow manda al usuario después de pagar
+app.get("/flow-return", async (req, res) => {
+  const reservaId = req.query.reserva;
+  if (!reservaId) return res.send("Reserva no identificada");
+  const row = await db.get("SELECT * FROM participantes WHERE id = ?", [reservaId]);
+  if (!row) return res.send("Reserva no encontrada");
+  if (row.pagado === 1 && row.numero) {
+    return res.send(`<h1>Pago confirmado ✅</h1><p>Tu número asignado es: <b>#${row.numero}</b></p>`);
+  } else {
+    return res.send(`<h1>Pago en proceso</h1><p>Si completaste el pago, espera unos segundos. <script>setTimeout(()=>location.reload(),4000)</script></p>`);
+  }
+});
 app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));
